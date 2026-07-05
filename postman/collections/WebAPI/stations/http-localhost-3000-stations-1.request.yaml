@@ -1,0 +1,5 @@
+$kind: http-request
+name: http://localhost:3000/stations/1
+url: http://localhost:3000/stations/1
+method: GET
+order: 2000

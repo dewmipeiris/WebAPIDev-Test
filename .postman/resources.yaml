@@ -1,0 +1,5 @@
+workspace:
+  id: 2347a0f6-86a8-4333-8009-57250704a9d6
+cloudResources:
+  collections:
+    ../postman/collections/WebAPI: 29364505-3ea71170-72c6-482e-8617-d4f2f976206b

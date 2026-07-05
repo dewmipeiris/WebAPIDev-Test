@@ -1,0 +1,5 @@
+$kind: http-request
+name: http://localhost:3000/vehicles/1/last-position
+url: ""
+method: GET
+order: 3000

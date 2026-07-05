@@ -1,0 +1,5 @@
+$kind: http-request
+name: http://localhost:3000/districts
+url: http://localhost:3000/districts
+method: GET
+order: 1000
