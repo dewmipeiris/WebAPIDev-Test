@@ -1,0 +1,5 @@
+$kind: http-request
+name: http://localhost:3000/vehicles/1/pings
+url: http://localhost:3000/vehicles/1/pings
+method: GET
+order: 2000

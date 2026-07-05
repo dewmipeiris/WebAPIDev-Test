@@ -1,0 +1,5 @@
+$kind: http-request
+name: http://localhost:3000/provinces
+url: http://localhost:3000/provinces
+method: GET
+order: 2000
