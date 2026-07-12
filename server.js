@@ -4,12 +4,25 @@ const data = require("./seed.json");
 const app = express();
 const PORT = 3000;
 
+app.use(express.json());
+
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, X-API-Key");
     next();
 });
+
+const API_KEY = "key_v01";
+let nextPingId = 33601;
+
+const requireApiKey = (req, res, next) => {
+    const key = req.headers["x-api-key"];
+    if (!key || key !== API_KEY) {
+        return res.status(401).json({ error: "Unauthorized" });
+    }
+    next();
+};
 
 app.get("/", (req, res) => {
     res.send("<h1>Hello World</h1>");
@@ -81,6 +94,31 @@ app.get("/vehicles/:id/last-position", (req, res) => {
     if (pings.length === 0) return res.status(404).json({ error: "No pings found for this vehicle" });
     const last = pings.reduce((a, b) => new Date(a.timestamp) > new Date(b.timestamp) ? a : b);
     res.json(last);
+});
+
+app.post("/vehicles/:id/pings", requireApiKey, (req, res) => {
+    const vehicle = data.vehicles.find(v => v.id === Number(req.params.id));
+    if (!vehicle) return res.status(404).json({ error: "Vehicle not found" });
+
+    const { latitude, longitude, speed } = req.body;
+    if (latitude === undefined || longitude === undefined) {
+        return res.status(400).json({ error: "latitude and longitude are required" });
+    }
+
+    const newPing = {
+        id: nextPingId++,
+        vehicle_id: vehicle.id,
+        latitude,
+        longitude,
+        speed: speed !== undefined ? speed : 0,
+        timestamp: new Date().toISOString()
+    };
+
+    data.pings.push(newPing);
+
+    res.status(201)
+        .location(`/vehicles/${vehicle.id}/pings/${newPing.id}`)
+        .json(newPing);
 });
 
 app.listen(PORT, () => {
